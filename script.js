@@ -147,3 +147,85 @@ function removeLocalTodos(todo) {
         localStorage.setItem("todos", JSON.stringify(todos));
 }
 
+
+
+// EDIT TODO FUNCTIONALITY - Works on both desktop & mobile
+let lastTap = 0;
+
+todoList.addEventListener('dblclick', handleEdit);
+todoList.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    const timeDiff = now - lastTap;
+    if (timeDiff < 300 && timeDiff > 0) {
+        handleEdit(e);
+    }
+    lastTap = now;
+});
+
+function handleEdit(e) {
+    const todoItem = e.target.closest('.todo-time');
+    if (!todoItem) return;
+
+    // Agar already edit mode mein hai to skip
+    if (todoItem.querySelector('.edit-input')) return;
+
+    const currentText = todoItem.innerText.trim();
+
+    const editInput = document.createElement('input');
+    editInput.type = 'text';
+    editInput.value = currentText;
+    editInput.classList.add('edit-input');
+
+    todoItem.innerText = '';
+    todoItem.appendChild(editInput);
+    editInput.focus();
+
+    const saveEdit = () => {
+        const newText = editInput.value.trim();
+        if (newText && newText !== currentText) {
+            todoItem.innerText = newText;
+            updateLocalTodo(currentText, newText);
+        } else {
+            todoItem.innerText = currentText;
+        }
+    };
+
+    editInput.addEventListener('blur', saveEdit);
+    editInput.addEventListener('keypress', (ev) => {
+        if (ev.key === 'Enter') editInput.blur();
+    });
+}
+
+function updateLocalTodo(oldText, newText) {
+    let todos = JSON.parse(localStorage.getItem('todos')) || [];
+    const index = todos.indexOf(oldText);
+    if (index !== -1) {
+        todos[index] = newText;
+        localStorage.setItem('todos', JSON.stringify(todos));
+    }
+}
+
+
+/*  DARK MODE TOGGLE  */
+const themeToggle = document.getElementById('theme-toggle');
+const themeIcon = themeToggle.querySelector('i');
+
+// Load saved theme on page load
+if (localStorage.getItem('theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    themeIcon.classList.replace('fa-moon', 'fa-sun');
+}
+
+// Toggle theme on click
+themeToggle.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    
+    // Switch icon
+    if (isDark) {
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+    } else {
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+    }
+});
