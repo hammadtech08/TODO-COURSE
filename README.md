@@ -15,6 +15,14 @@ A clean, responsive Todo List web app with dark mode, local storage support, and
 ## 📁 TODO-COURSE Repository
 [https://github.com/hammadtech08/TODO-COURSE](https://github.com/hammadtech08/TODO-COURSE)
 
+# 📸 Screenshots
+
+### TODO-LISt
+![TODO_LIST](Screenshots/TODO_LIST.png)
+
+### DARK-THEME
+![DARK-THEME](Screenshots/TODO_DARK_THEME.png)
+
 ## ✨ Features
 
 - ✅ **Add Todos** — Type and press `+` to add a task
